@@ -8,7 +8,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, mean_squared_log_error, \
-    explained_variance_score, accuracy_score
+    explained_variance_score
 
 from project.utility import (
     read_and_prepare_dataset,
@@ -21,6 +21,7 @@ from project.utility import (
 
 
 def main_program(path, logger):
+    # Prepare dataset
     dataframe = read_and_prepare_dataset(logger, path)
 
     # Display top 5 entries for fun
@@ -49,6 +50,8 @@ def main_program(path, logger):
 
     # Part one
     def simple_calculations(df):
+        print("Conduct simple calculations:", end='\n\n')
+
         # Find top and bottom salaries for each year and job category
         top_bottom_salaries = get_top_bottom_salaries(
             logger,
@@ -145,14 +148,24 @@ def main_program(path, logger):
             end='\n-------------------------------------\n\n'
         )
 
+        print("End of simple calculations", end='\n\n-------------------------------------\n\n')
+
     def visualizations_and_analysis(data):
+        print("Conduct analysis and visualization:", end='\n\n')
+
+        # Create box plots for various categories
         def create_box_plots(df):
             try:
-                # Create subplots
                 fig, axes = plt.subplots(3, 2, figsize=(20, 15))
                 # Categories for which we want to create box plots
-                box_plots = ['Experience Level', 'Work Setting', 'Employment Type', 'Job Category', 'Work Year',
-                             'Company Size']
+                box_plots = [
+                    'Experience Level',
+                    'Work Setting',
+                    'Employment Type',
+                    'Job Category',
+                    'Work Year',
+                    'Company Size'
+                ]
 
                 # Box plots for various metrics
                 for ax, metric_column in zip(axes.flatten(), box_plots):
@@ -160,17 +173,18 @@ def main_program(path, logger):
                     ax.set_title(f'Salary Distribution by {metric_column}')
                     ax.tick_params(axis='x', rotation=45)
 
-                # Adjust layout
                 plt.tight_layout()
+                plt.savefig('box_plots_for_categories.png', dpi=300, bbox_inches='tight')
                 plt.show()
             except Exception as e:
                 logger.error(f"Error creating box plots: {e}")
                 print(f"Error creating box plots: {e}")
 
+        # Create bar charts for average salaries across categories
         def create_bar_charts_for_categories(df):
             try:
-                # Create subplots
                 fig, axes = plt.subplots(3, 2, figsize=(20, 15))
+                # Categories for which we want to create bar charts
                 box_plots = ['Experience Level', 'Work Setting', 'Employment Type', 'Job Category', 'Work Year',
                              'Company Size']
 
@@ -185,22 +199,26 @@ def main_program(path, logger):
 
                     # Annotate bars with the exact numbers
                     for bar in bars.patches:
-                        ax.annotate(f'{bar.get_height():.0f}',
-                                    xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                                    xytext=(0, 0),
-                                    textcoords='offset points',
-                                    ha='center', va='bottom')
+                        ax.annotate(
+                            f'{bar.get_height():.0f}',
+                            xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                            xytext=(0, 0),
+                            textcoords='offset points',
+                            ha='center', va='bottom'
+                        )
 
-                # Adjust layout
                 plt.tight_layout()
+                plt.savefig('bar_charts_for_categories.png', dpi=300, bbox_inches='tight')
                 plt.show()
             except Exception as e:
                 logger.error(f"Error creating bar charts: {e}")
                 print(f"Error creating bar charts: {e}")
 
+        # Create bar charts and pie charts for amount of jobs in various categories
         def create_bar_charts_and_pie_charts_for_categories(df):
             try:
                 fig, axes = plt.subplots(4, 2, figsize=(20, 15))
+                # Categories for which we want to create bar charts and pie charts
                 categories = ['Experience Level', 'Company Size', 'Work Setting', 'Employment Type']
 
                 # Bar charts and pie charts for number of jobs by various categories
@@ -214,11 +232,13 @@ def main_program(path, logger):
 
                     # Annotate bars with the exact numbers
                     for bar in bars.patches:
-                        axes[i, 0].annotate(f'{bar.get_height():.0f}',
-                                            xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
-                                            xytext=(0, 0),
-                                            textcoords='offset points',
-                                            ha='center', va='bottom')
+                        axes[i, 0].annotate(
+                            f'{bar.get_height():.0f}',
+                            xy=(bar.get_x() + bar.get_width() / 2, bar.get_height()),
+                            xytext=(0, 0),
+                            textcoords='offset points',
+                            ha='center', va='bottom'
+                        )
 
                     # Pie chart
                     wedges, texts = axes[i, 1].pie(count, startangle=90, colors=sns.color_palette('pastel'))
@@ -226,43 +246,57 @@ def main_program(path, logger):
                     axes[i, 1].set_ylabel('')
 
                     # Add legend
-                    axes[i, 1].legend(wedges,
-                                      [f'{cat} - {pct:.1f}%' for cat, pct in
-                                       zip(count.index, 100 * count / count.sum())],
-                                      title=f'{category}', loc='center left', bbox_to_anchor=(1, 0.5))
+                    axes[i, 1].legend(
+                        wedges,
+                        [f'{cat} - {pct:.1f}%' for cat, pct in zip(count.index, 100 * count / count.sum())],
+                        title=f'{category}', loc='center left', bbox_to_anchor=(1, 0.5)
+                    )
 
-                # Adjust layout
                 plt.tight_layout()
+                plt.savefig('bar_charts_and_pie_charts_for_categories.png', dpi=300, bbox_inches='tight')
                 plt.show()
             except Exception as e:
                 logger.error(f"Error creating bart charts and pie charts: {e}")
                 print(f"Error creating bart charts and pie charts: {e}")
 
+        # Create violin plots for various categories
         def create_violin_plots(df):
             try:
-                # Categories for which we want to create violin plots
-                categories = ['Experience Level', 'Work Setting', 'Employment Type', 'Job Category', 'Work Year',
-                              'Company Size']
-
-                # Create subplots
                 fig, axes = plt.subplots(3, 2, figsize=(18, 15))
+                # Categories for which we want to create violin plots
+                categories = [
+                    'Experience Level',
+                    'Work Setting',
+                    'Employment Type',
+                    'Job Category',
+                    'Work Year',
+                    'Company Size'
+                ]
 
                 # Violin plots for various categories
                 for ax, category in zip(axes.flatten(), categories):
-                    sns.violinplot(ax=ax, x=category, y='Salary in USD', data=df, hue=category, palette='Set2',
-                                   legend=False)
+                    sns.violinplot(
+                        ax=ax,
+                        x=category,
+                        y='Salary in USD',
+                        data=df,
+                        hue=category,
+                        palette='Set2',
+                        legend=False
+                    )
                     ax.set_title(f'Salary Distribution by {category}')
                     ax.set_xlabel(category)
                     ax.set_ylabel('Salary in USD')
                     ax.tick_params(axis='x', rotation=45)
 
-                # Adjust layout
                 plt.tight_layout()
+                plt.savefig('violin_plots_for_categories.png', dpi=300, bbox_inches='tight')
                 plt.show()
             except Exception as e:
                 logger.error(f"Error creating violin plots: {e}")
                 print(f"Error creating violin plots: {e}")
 
+        # Create correlation heatmap for dataset
         def create_correlation_heatmap(df):
             try:
                 # Calculate the correlation matrix
@@ -272,28 +306,38 @@ def main_program(path, logger):
                 plt.figure(figsize=(12, 10))
                 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', linewidths=0.5)
                 plt.title('Correlation Heatmap of All Relevant Columns')
+                plt.savefig('correlation_heatmap.png', dpi=300, bbox_inches='tight')
                 plt.show()
             except Exception as e:
                 logger.error(f"Error creating correlation heatmap: {e}")
                 print(f"Error creating correlation heatmap: {e}")
 
+        # Create a pairplot for various columns
         def create_pairpot(df):
             try:
                 # Select relevant columns for the pair plot
-                pair_plot_columns = ['Work Year', 'Salary in USD', 'Experience Level', 'Employment Type',
-                                     'Company Size',
-                                     'Job Category']
+                pair_plot_columns = [
+                    'Work Year',
+                    'Salary in USD',
+                    'Experience Level',
+                    'Employment Type',
+                    'Company Size',
+                    'Job Category'
+                ]
 
                 # Create a pair plot
                 sns.pairplot(df[pair_plot_columns], hue="Experience Level", palette='Set2', diag_kind='kde')
                 plt.suptitle('Pair Plot of Relevant Columns', y=1.02)
+                plt.savefig('pairplot.png', dpi=300, bbox_inches='tight')
                 plt.show()
             except Exception as e:
                 logger.error(f"Error creating pairplots: {e}")
                 print(f"Error creating pairplots: {e}")
 
+        # Conduct ANOVA for select columns
         def conduct_anova(df):
             try:
+                # Formula for selecting columns and conducting ANOVA
                 formula = ('Q("Salary in USD") ~ C(Q("Experience Level")) + C(Q("Employment Type")) + ' +
                            'C(Q("Job Category")) + C(Q("Work Setting")) + C(Q("Company Size"))')
 
@@ -307,6 +351,7 @@ def main_program(path, logger):
                 logger.error(f"Error during conducting ANOVA {e}")
                 print(f"Error during conducting ANOVA {e}")
 
+        # Analyse dataset using linear regression to determine feature impact
         def analyse_linear_regression(df):
             try:
                 # Convert to numpy arrays
@@ -328,8 +373,14 @@ def main_program(path, logger):
                 coefficients = np.linalg.inv(X.T @ X) @ X.T @ y
 
                 # Print the coefficients with corresponding column names
-                column_names = ['Intercept', 'Work Year', 'Experience Level', 'Work Setting', 'Company Size',
-                                'Employment Type']
+                column_names = [
+                    'Intercept',
+                    'Work Year',
+                    'Experience Level',
+                    'Work Setting',
+                    'Company Size',
+                    'Employment Type'
+                ]
 
                 coefficients_dict = {name: coef for name, coef in zip(column_names, coefficients)}
 
@@ -372,7 +423,12 @@ def main_program(path, logger):
         data_encoded, _ = encode_categorical_columns(logger, data, custom_mappings_for_linear_regression)
         analyse_linear_regression(data_encoded)
 
+        print("End of analysis and visualization", end='\n\n-------------------------------------\n\n')
+
     def machine_learning_models(data):
+        print("Implement Machine Learning models:", end='\n\n')
+
+        # Implement random forests ML model on dataset
         def random_forests(df):
             try:
                 # Define the features and the target
@@ -409,17 +465,18 @@ def main_program(path, logger):
                 feature_importance_df = pd.DataFrame({'Feature': X.columns, 'Importance': feature_importances})
                 feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
 
-                print("Feature Importances:\n", feature_importance_df)
+                print("Feature Importances for Random Forests:\n", feature_importance_df)
                 print("-------------------------------------\n")
 
                 # Visualize feature importance
                 fig, ax = plt.subplots(figsize=(12, 8))
                 ax = feature_importance_df.plot(kind='bar', x='Feature', y='Importance', legend=False, ax=ax)
-                ax.set_title('Feature Importance for Decision Trees')
+                ax.set_title('Feature Importance for Random Forests')
                 ax.set_xlabel('Features')
                 ax.set_ylabel('Importance')
                 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
                 plt.tight_layout()
+                plt.savefig('feature_importance_for_random_forests.png', dpi=300, bbox_inches='tight')
                 plt.show()
 
                 return rf_model
@@ -427,6 +484,7 @@ def main_program(path, logger):
                 logger.error(f"Error in random_forests function: {e}")
                 print(f"Error in random_forests function: {e}")
 
+        # Implement decision trees ML model on dataset
         def decision_trees(df):
             try:
                 # Define the features and the target
@@ -462,7 +520,7 @@ def main_program(path, logger):
                 feature_importance_df = pd.DataFrame({'Feature': X.columns, 'Importance': feature_importances})
                 feature_importance_df = feature_importance_df.sort_values(by='Importance', ascending=False)
 
-                print("Feature Importances:\n", feature_importance_df)
+                print("Feature Importances for Decision Trees:\n", feature_importance_df)
                 print("-------------------------------------\n")
 
                 # Visualize feature importance
@@ -473,6 +531,7 @@ def main_program(path, logger):
                 ax.set_ylabel('Importance')
                 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
                 plt.tight_layout()
+                plt.savefig('feature_importance_for_decision_trees.png', dpi=300, bbox_inches='tight')
                 plt.show()
 
                 return dt_model
@@ -488,7 +547,8 @@ def main_program(path, logger):
         }
 
         data_encoded, all_mappings = encode_categorical_columns(logger, data, custom_mappings)
-        # Interaction Feature
+
+        # Interaction Features
         data_encoded['Experience Employment Type Interaction'] = (
                 data_encoded['Experience Level'] * data_encoded['Employment Type']
         )
@@ -514,6 +574,9 @@ def main_program(path, logger):
 
         random_forests(data_encoded)
         decision_trees(data_encoded)
+
+
+        print("End of Machine Learning models implementation", end='\n\n-------------------------------------\n\n')
 
     simple_calculations(dataframe)
     visualizations_and_analysis(dataframe)

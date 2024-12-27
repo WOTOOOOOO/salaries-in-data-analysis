@@ -142,6 +142,7 @@ def get_top_bottom_salaries(logger, df, group_columns, salary_column, count, add
         print(f"Error while getting {count} top and bottom salaries: {e}")
 
 
+# Get th mean salary of a grouped dataframe
 def get_mean_salary_by_group(logger, df, group_columns, salary_column):
     try:
         mean_salary_df = df.groupby(group_columns)[salary_column].mean().reset_index()
@@ -151,11 +152,11 @@ def get_mean_salary_by_group(logger, df, group_columns, salary_column):
         print(f"Error while getting mean salary: {e}")
 
 
+# Encode a dataframe using general, and custom mapping
 def encode_categorical_columns(logger, df, custom_mappings):
     try:
         # Create a copy of the DataFrame to avoid modifying the original
         df_copy = df.copy()
-
         # Apply custom mappings
         for column, mapping in custom_mappings.items():
             df_copy[column] = df_copy[column].map(mapping, na_action='ignore')
