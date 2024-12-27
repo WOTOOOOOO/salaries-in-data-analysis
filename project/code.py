@@ -103,7 +103,7 @@ def main_program(path, logger):
             ['Work Year', 'Job Category'],
             'Salary in USD'
         )
-        print("Display average salary for each job, category every year")
+        print("Display average salary for each job category, every year")
         print(
             average_salary_by_job_category_every_year,
             end='\n-------------------------------------\n\n'
@@ -116,33 +116,33 @@ def main_program(path, logger):
             ['Work Year', 'Job Category', 'Experience Level'],
             'Salary in USD'
         )
-        print("Display average salary for each job, category every year")
+        print("Display average salary for each job category and experience level, every year")
         print(
             average_salary_by_job_category_every_year,
             end='\n-------------------------------------\n\n'
         )
 
-        # Find average salary for each job category and experience level, every year
+        # Find average salary for each work setting every year
         average_salary_by_job_category_every_year = get_mean_salary_by_group(
             logger,
             df,
             ['Work Year', 'Work Setting'],
             'Salary in USD'
         )
-        print("Display average salary for each job, category every year")
+        print("Display average salary for each work setting every year")
         print(
             average_salary_by_job_category_every_year,
             end='\n-------------------------------------\n\n'
         )
 
-        # Find average salary for each job category and experience level, every year
+        # Find average salary for each job category and work setting, every year
         average_salary_by_job_category_every_year = get_mean_salary_by_group(
             logger,
             df,
             ['Work Year', 'Job Category', 'Work Setting'],
             'Salary in USD'
         )
-        print("Display average salary for each job, category every year")
+        print("Display average salary for each job category and work setting, every year")
         print(
             average_salary_by_job_category_every_year,
             end='\n-------------------------------------\n\n'
